@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>YASIN — Creative Identity</title>
+
+<meta name="theme-color" content="#080808">
+<meta name="description" content="YASIN — Anime editor, visual creator and mobile video editor.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #080808;
+  --panel: #101010;
+  --panel-hover: #171717;
+  --white: #f5f4f1;
+  --muted: #b9b9b9;
+  --soft: #858585;
+  --border: rgba(255,255,255,.14);
+  --serif: "Playfair Display", Georgia, serif;
+  --sans: "DM Sans", Arial, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--bg);
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 50% 15%, rgba(255,255,255,.045), transparent 38%),
+    radial-gradient(ellipse at 90% 65%, rgba(255,255,255,.025), transparent 35%),
+    var(--bg);
+  color: var(--white);
+  font-family: var(--sans);
+  font-weight: 600;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  color: #080808;
+  background: #f5f4f1;
+}
+
+/* INTRO SCREEN */
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: #050505;
+  animation: introExit 1s ease 2.7s forwards;
+}
+
+.intro-orbit {
+  position: absolute;
+  width: min(85vw, 390px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 50%;
+  animation: orbitRotate 8s linear infinite;
+}
+
+.intro-orbit::before,
+.intro-orbit::after {
+  content: "";
+  position: absolute;
+  border: 1px solid rgba(255,255,255,.11);
+  border-radius: 50%;
+}
+
+.intro-orbit::before {
+  inset: 13%;
+  transform: rotate(35deg) scaleX(.75);
+}
+
+.intro-orbit::after {
+  inset: 25%;
+  transform: rotate(-35deg) scaleX(.8);
+}
+
+.intro-content {
+  z-index: 2;
+  text-align: center;
+  width: 100%;
+  padding: 25px;
+}
+
+.intro-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.35);
+  box-shadow: 0 0 55px rgba(255,255,255,.12);
+  animation: logoReveal 1.1s cubic-bezier(.16,1,.3,1) both;
+}
+
+.intro-title {
+  margin-top: 27px;
+  font-family: var(--serif);
+  font-size: clamp(48px, 13vw, 76px);
+  font-weight: 900;
+  letter-spacing: .13em;
+  padding-left: .13em;
+  line-height: 1.2;
+  background: linear-gradient(115deg, #777, #fff 42%, #aaa 68%, #fff);
+  background-size: 220% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: titleReveal 1s .35s both, silverShine 3s 1.3s linear infinite;
+}
+
+.intro-line {
+  width: 0;
+  max-width: 240px;
+  height: 2px;
+  margin: 25px auto 20px;
+  background: linear-gradient(90deg, transparent, #fff, transparent);
+  animation: lineReveal .9s .8s ease forwards;
+}
+
+.intro-caption {
+  color: #e0e0e0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .35em;
+  animation: titleReveal .8s 1s both;
+}
+
+.intro-progress {
+  width: min(72vw, 280px);
+  height: 3px;
+  margin: 30px auto 0;
+  background: #292929;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.intro-progress span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: #fff;
+  animation: progressLoad 2.2s ease forwards;
+}
+
+@keyframes introExit {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+@keyframes orbitRotate {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes logoReveal {
+  from {
+    opacity: 0;
+    transform: scale(.65) rotate(-12deg);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes titleReveal {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes lineReveal {
+  to { width: 240px; }
+}
+
+@keyframes silverShine {
+  to { background-position: 220% center; }
+}
+
+@keyframes progressLoad {
+  to { width: 100%; }
+}
+
+/* PAGE */
+
+.page {
+  width: 100%;
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+/* HEADER */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 27px 0;
+  border-bottom: 1px solid rgba(255,255,255,.09);
+  animation: titleReveal .8s 2.8s both;
+}
+
+.brand {
+  font-family: var(--serif);
+  font-size: 25px;
+  font-weight: 900;
+  letter-spacing: .13em;
+}
+
+.header-tag {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 15px;
+  border: 1px solid var(--border);
+  border-radius: 50px;
+  color: #dedede;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .12em;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #d8d8d8;
+  box-shadow: 0 0 12px rgba(255,255,255,.6);
+}
+
+/* HERO */
+
+.hero {
+  position: relative;
+  min-height: 620px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 80px 0 65px;
+}
+
+.hero-visual {
+  width: 270px;
+  height: 270px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin-bottom: 50px;
+  animation: titleReveal 1s 3s both;
+}
+
+.hero-orbit {
+  position: absolute;
+  border: 1px solid rgba(255,255,255,.19);
+  border-radius: 50%;
+  inset: 0;
+  animation: orbitRotate 20s linear infinite;
+}
+
+.hero-orbit.two {
+  inset: 20px;
+  transform: rotate(45deg) scaleX(.77);
+  animation-direction: reverse;
+}
+
+.hero-orbit.three {
+  inset: 45px;
+  transform: rotate(-30deg) scaleX(.9);
+  animation-duration: 15s;
+}
+
+.hero-orbit::before {
+  content: "";
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  top: 14%;
+  left: 20%;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow:
+    90px 30px 0 -2px #ddd,
+    160px 90px 0 -1px #aaa,
+    35px 180px 0 -2px #fff;
+}
+
+.hero-avatar-wrap {
+  position: relative;
+  width: 125px;
+  height: 125px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.hero-avatar-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -7px;
+  border: 1px solid rgba(255,255,255,.7);
+  border-radius: 50%;
+  border-right-color: transparent;
+  animation: orbitRotate 5s linear infinite;
+}
+
+.hero-avatar-wrap::after {
+  content: "";
+  position: absolute;
+  inset: -15px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 50%;
+}
+
+.hero-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,.3);
+  background: #171717;
+  box-shadow: 0 0 45px rgba(255,255,255,.12);
+}
+
+.eyebrow {
+  color: #c2c2c2;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(48px, 10vw, 84px);
+  font-weight: 900;
+  line-height: 1.13;
+  letter-spacing: -.045em;
+  margin-bottom: 20px;
+  animation: titleReveal .9s 3.15s both;
+}
+
+.hero h1 span {
+  display: block;
+  background: linear-gradient(110deg, #999, #fff 45%, #aaa 72%, #fff);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: silverShine 5s linear infinite;
+}
+
+.hero-description {
+  max-width: 580px;
+  color: #c7c7c7;
+  font-size: clamp(15px, 3.5vw, 18px);
+  font-weight: 700;
+  line-height: 1.9;
+  animation: titleReveal .9s 3.3s both;
+}
+
+.hero-badge {
+  margin-top: 29px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--border);
+  padding: 13px 20px;
+  border-radius: 50px;
+  color: #ededed;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .15em;
+  animation: titleReveal .9s 3.45s both;
+}
+
+.hero-badge span {
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+}
+
+/* GENERAL SECTIONS */
+
+.section {
+  padding: 80px 0;
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+
+.section-label {
+  color: #aaa;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .3em;
+  margin-bottom: 23px;
+}
+
+.section h2 {
+  font-family: var(--serif);
+  font-size: clamp(39px, 8vw, 58px);
+  font-weight: 900;
+  letter-spacing: -.04em;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.section-description {
+  color: #c9c9c9;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.9;
+  max-width: 650px;
+  margin-bottom: 38px;
+}
+
+/* ABOUT CARD */
+
+.about-card {
+  padding: 35px;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 30px;
+  background: linear-gradient(135deg, rgba(255,255,255,.055), rgba(255,255,255,.012));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+  transition: border-color .3s, transform .3s;
+}
+
+.about-card:hover {
+  border-color: rgba(255,255,255,.32);
+  transform: translateY(-3px);
+}
+
+.card-kicker {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .19em;
+  margin-bottom: 20px;
+}
+
+.about-card p {
+  color: #d0d0d0;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 2;
+}
+
+.about-card strong {
+  color: white;
+  font-weight: 900;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.pill {
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 50px;
+  padding: 11px 14px;
+  color: #eee;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+/* EDITING APPS */
+
+.apps-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 17px;
+}
+
+.app-card {
+  min-height: 235px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 25px 14px;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 28px;
+  background: linear-gradient(145deg, #151515, #0b0b0b);
+  transition: transform .35s, border-color .35s, background .35s;
+  position: relative;
+  overflow: hidden;
+}
+
+.app-card::before {
+  content: "";
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  top: -100px;
+  right: -100px;
+  background: rgba(255,255,255,.07);
+  border-radius: 50%;
+  filter: blur(15px);
+  transition: .4s;
+}
+
+.app-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(255,255,255,.35);
+  background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
+}
+
+.app-card:hover::before {
+  top: -45px;
+  right: -45px;
+}
+
+.app-logo-box {
+  width: 82px;
+  height: 82px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 24px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 20px;
+  background: #080808;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  overflow: hidden;
+}
+
+.app-logo-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 9px;
+}
+
+.app-logo-box .fallback-logo {
+  display: none;
+  font-size: 27px;
+  font-weight: 900;
+  color: white;
+}
+
+.app-name {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: .01em;
+  margin-bottom: 8px;
+}
+
+.app-type {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .09em;
+  color: #bdbdbd;
+}
+
+/* SOCIAL LINKS */
+
+.social-list {
+  display: grid;
+  gap: 15px;
+}
+
+.social-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 105px;
+  padding: 20px 22px;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 27px;
+  background: linear-gradient(110deg, rgba(255,255,255,.045), rgba(255,255,255,.012));
+  transition: transform .3s, border-color .3s, background .3s;
+}
+
+.social-card:hover {
+  transform: translateX(5px);
+  border-color: rgba(255,255,255,.4);
+  background: rgba(255,255,255,.055);
+}
+
+.social-icon {
+  width: 57px;
+  height: 57px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 19px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: #161616;
+}
+
+.social-icon svg {
+  width: 25px;
+  height: 25px;
+  fill: none;
+  stroke: #f4f4f4;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.social-icon svg.fill-icon {
+  fill: #f4f4f4;
+  stroke: none;
+}
+
+.social-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.social-name {
+  color: #f5f5f5;
+  font-size: 17px;
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+
+.social-description {
+  color: #bcbcbc;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.external-arrow {
+  flex-shrink: 0;
+  font-size: 23px;
+  color: #e8e8e8;
+  transition: transform .3s;
+}
+
+.social-card:hover .external-arrow {
+  transform: translate(3px, -3px);
+}
+
+/* FOOTER */
+
+.footer {
+  padding: 35px 0 45px;
+  border-top: 1px solid rgba(255,255,255,.1);
+  text-align: center;
+}
+
+.footer-brand {
+  font-family: var(--serif);
+  font-size: 25px;
+  font-weight: 900;
+  letter-spacing: .15em;
+  margin-bottom: 12px;
+}
+
+.footer p {
+  color: #aaa;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.9;
+}
+
+.footer-note {
+  margin-top: 15px;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+/* SCROLL REVEAL */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(35px);
+  filter: blur(4px);
+  transition:
+    opacity .8s ease,
+    transform .8s cubic-bezier(.16,1,.3,1),
+    filter .8s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.apps-grid .app-card:nth-child(2) {
+  transition-delay: .1s;
+}
+
+.apps-grid .app-card:nth-child(3) {
+  transition-delay: .15s;
+}
+
+.apps-grid .app-card:nth-child(4) {
+  transition-delay: .2s;
+}
+
+@media (min-width: 760px) {
+  .page {
+    padding: 0 45px;
+  }
+
+  .hero {
+    min-height: 720px;
+  }
+
+  .hero-visual {
+    width: 310px;
+    height: 310px;
+  }
+
+  .hero-avatar-wrap {
+    width: 145px;
+    height: 145px;
+  }
+
+  .apps-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .app-card {
+    min-height: 250px;
+  }
+
+  .social-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 430px) {
+  .page {
+    padding: 0 24px;
+  }
+
+  .header {
+    padding: 22px 0;
+  }
+
+  .brand {
+    font-size: 22px;
+  }
+
+  .header-tag {
+    font-size: 9px;
+    padding: 9px 11px;
+  }
+
+  .hero {
+    min-height: 570px;
+    padding: 60px 0;
+  }
+
+  .hero-visual {
+    width: 240px;
+    height: 240px;
+    margin-bottom: 40px;
+  }
+
+  .hero-avatar-wrap {
+    width: 110px;
+    height: 110px;
+  }
+
+  .hero h1 {
+    font-size: clamp(44px, 12vw, 58px);
+  }
+
+  .hero-description {
+    font-size: 15px;
+  }
+
+  .section {
+    padding: 65px 0;
+  }
+
+  .section-description {
+    font-size: 14px;
+  }
+
+  .about-card {
+    padding: 25px 22px;
+    border-radius: 25px;
+  }
+
+  .about-card p {
+    font-size: 14px;
+  }
+
+  .app-card {
+    min-height: 205px;
+    padding: 20px 8px;
+    border-radius: 24px;
+  }
+
+  .app-logo-box {
+    width: 72px;
+    height: 72px;
+    border-radius: 21px;
+  }
+
+  .app-name {
+    font-size: 17px;
+  }
+
+  .app-type {
+    font-size: 9px;
+  }
+
+  .social-card {
+    gap: 13px;
+    padding: 17px 14px;
+    min-height: 96px;
+    border-radius: 23px;
+  }
+
+  .social-icon {
+    width: 49px;
+    height: 49px;
+    border-radius: 16px;
+  }
+
+  .social-name {
+    font-size: 15px;
+  }
+
+  .social-description {
+    font-size: 11px;
+  }
+
+  .external-arrow {
+    font-size: 19px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .intro {
+    display: none;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- INTRO ANIMATION -->
+
+<div class="intro" aria-label="Welcome to YASIN">
+  <div class="intro-orbit"></div>
+
+  <div class="intro-content">
+    <img
+      class="intro-logo"
+      src="https://i.ibb.co.com/1fFbBwnW/tiktok-video-z-Bcw8.jpg"
+      alt="YASIN logo"
+      onerror="this.style.display='none';document.getElementById('introFallback').style.display='grid';"
+    >
+
+    <div id="introFallback"
+      style="display:none;width:100px;height:100px;margin:auto;border:1px solid #555;border-radius:50%;place-items:center;font-family:Georgia,serif;font-size:48px;">
+      Y
+    </div>
+
+    <div class="intro-title">YASIN</div>
+    <div class="intro-line"></div>
+    <div class="intro-caption">CREATIVE IDENTITY</div>
+
+    <div class="intro-progress">
+      <span></span>
+    </div>
+  </div>
+</div>
+
+<main class="page">
+
+  <!-- HEADER -->
+
+  <header class="header">
+    <a href="#home" class="brand">YASIN</a>
+
+    <div class="header-tag">
+      <span class="status-dot"></span>
+      MOBILE CREATOR
+    </div>
+  </header>
+
+  <!-- HERO -->
+
+  <section class="hero" id="home">
+
+    <div class="hero-visual">
+      <div class="hero-orbit"></div>
+      <div class="hero-orbit two"></div>
+      <div class="hero-orbit three"></div>
+
+      <div class="hero-avatar-wrap">
+        <img
+          class="hero-avatar"
+          src="https://i.ibb.co.com/1fFbBwnW/tiktok-video-z-Bcw8.jpg"
+          alt="YASIN profile logo"
+          onerror="this.style.display='none';this.parentElement.innerHTML='<span style=&quot;font-family:Georgia,serif;font-size:60px;font-weight:900&quot;>Y</span>';"
+        >
+      </div>
+    </div>
+
+    <div class="eyebrow">A LITTLE ABOUT ME</div>
+
+    <h1>
+      Creative
+      <span>Identity.</span>
+    </h1>
+
+    <p class="hero-description">
+      Visual storytelling, built frame by frame.
+      Creating edits with creativity, precision and passion.
+    </p>
+
+    <div class="hero-badge">
+      <span></span>
+      ANIME EDITOR & VISUAL CREATOR
+      <span></span>
+    </div>
+
+  </section>
+
+  <!-- ABOUT -->
+
+  <section class="section reveal" id="about">
+
+    <div class="section-label">01 / ABOUT MY WORK</div>
+
+    <h2>Behind The Edits.</h2>
+
+    <p class="section-description">
+      Every frame has a purpose. Every edit tells a story.
+    </p>
+
+    <div class="about-card">
+
+      <div class="card-kicker">WHAT I DO</div>
+
+      <p>
+        I create <strong>anime edits</strong> on mobile using
+        professional editing techniques. I also offer
+        <strong>paid video editing</strong>, custom projects
+        and editing asset packs for creators.
+        My focus is on clean visuals, smooth transitions
+        and a distinctive editing style.
+      </p>
+
+      <div class="pills">
+        <span class="pill">ANIME EDITS</span>
+        <span class="pill">MOBILE EDITOR</span>
+        <span class="pill">AM PROJECTS</span>
+        <span class="pill">PAID EDITS</span>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- EDITING APPS -->
+
+  <section class="section reveal" id="apps">
+
+    <div class="section-label">02 / MY TOOLKIT</div>
+
+    <h2>Editing Apps.</h2>
+
+    <p class="section-description">
+      The tools I use to create, edit and bring my ideas to life.
+    </p>
+
+    <div class="apps-grid">
+
+      <!-- ALIGHT MOTION / AM -->
+      <div class="app-card reveal">
+
+        <div class="app-logo-box">
+          <img
+            src="https://cdn.simpleicons.org/alightmotion/FFFFFF"
+            alt="Alight Motion logo"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='block';"
+          >
+          <span class="fallback-logo">AM</span>
+        </div>
+
+        <div class="app-name">AM</div>
+        <div class="app-type">MOTION EDITING</div>
+
+      </div>
+
+      <!-- CAPCUT -->
+      <div class="app-card reveal">
+
+        <div class="app-logo-box">
+          <img
+            src="https://cdn.simpleicons.org/capcut/FFFFFF"
+            alt="CapCut logo"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='block';"
+          >
+          <span class="fallback-logo">C</span>
+        </div>
+
+        <div class="app-name">CapCut</div>
+        <div class="app-type">VIDEO EDITING</div>
+
+      </div>
+
+      <!-- WINK -->
+      <div class="app-card reveal">
+
+        <div class="app-logo-box">
+          <img
+            src="https://cdn.simpleicons.org/wink/FFFFFF"
+            alt="Wink app logo"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='block';"
+          >
+          <span class="fallback-logo">W</span>
+        </div>
+
+        <div class="app-name">Wink</div>
+        <div class="app-type">VIDEO ENHANCEMENT</div>
+
+      </div>
+
+      <!-- NODE VIDEO -->
+      <div class="app-card reveal">
+
+        <div class="app-logo-box">
+          <img
+            src="https://cdn.simpleicons.org/nodevideo/FFFFFF"
+            alt="Node Video logo"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='block';"
+          >
+          <span class="fallback-logo">N</span>
+        </div>
+
+        <div class="app-name">Node Video</div>
+        <div class="app-type">ADVANCED EDITING</div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- SOCIAL LINKS -->
+
+  <section class="section reveal" id="connect">
+
+    <div class="section-label">03 / FIND ME ONLINE</div>
+
+    <h2>Connect.</h2>
+
+    <p class="section-description">
+      Follow my work, explore my edits and join my creative community.
+    </p>
+
+    <div class="social-list">
+
+      <!-- TIKTOK MAIN -->
+      <a
+        class="social-card"
+        href="https://www.tiktok.com/@yasin.arft.99?_r=1&_t=ZS-9AblinVOWX6"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div class="social-icon">
+          <svg viewBox="0 0 24 24" class="fill-icon" aria-label="TikTok">
+            <path d="M19.6 7.2a7.1 7.1 0 0 1-4.4-1.5v8.1a6.2 6.2 0 1 1-5.4-6.1v3.4a2.9 2.9 0 1 0 2 2.7V2.5h3.4c.3 2.2 2 3.9 4.4 4.1z"/>
+          </svg>
+        </div>
+
+        <div class="social-info">
+          <div class="social-name">TikTok</div>
+          <div class="social-description">Anime edits & creative videos</div>
+        </div>
+
+        <div class="external-arrow">↗</div>
+      </a>
+
+      <!-- SECOND TIKTOK -->
+      <a
+        class="social-card"
+        href="https://www.tiktok.com/@verseaft100?_r=1&_t=ZS-9AblnltliIn"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div class="social-icon">
+          <svg viewBox="0 0 24 24" class="fill-icon" aria-label="TikTok">
+            <path d="M19.6 7.2a7.1 7.1 0 0 1-4.4-1.5v8.1a6.2 6.2 0 1 1-5.4-6.1v3.4a2.9 2.9 0 1 0 2 2.7V2.5h3.4c.3 2.2 2 3.9 4.4 4.1z"/>
+          </svg>
+        </div>
+
+        <div class="social-info">
+          <div class="social-name">TikTok / Second Account</div>
+          <div class="social-description">More edits & creative content</div>
+        </div>
+
+        <div class="external-arrow">↗</div>
+      </a>
+
+      <!-- YOUTUBE -->
+      <a
+        class="social-card"
+        href="https://youtube.com/@yasinzx100k"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div class="social-icon">
+          <svg viewBox="0 0 24 24" class="fill-icon" aria-label="YouTube">
+            <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6z"/>
+          </svg>
+        </div>
+
+        <div class="social-info">
+          <div class="social-name">YouTube</div>
+          <div class="social-description">YASIN ZX — anime edits</div>
+        </div>
+
+        <div class="external-arrow">↗</div>
+      </a>
+
+      <!-- FACEBOOK -->
+      <a
+        class="social-card"
+        href="https://m.facebook.com/yasin.arft.99?log_join_id=ebd1fa93-8301-4d01-afe6-93ccec69633c&wtsid=rdr_0FJTEuOZ6hDJc8oao"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div class="social-icon">
+          <svg viewBox="0 0 24 24" class="fill-icon" aria-label="Facebook">
+            <path d="M24 12.1A12 12 0 1 0 10.1 24v-8.4H7.1v-3.5h3V9.4c0-3 1.8-4.7 4.6-4.7 1.3 0 2.6.2 2.6.2v2.9h-1.5c-1.5 0-2 .9-2 1.9v2.3h3.4l-.5 3.5h-2.9V24A12 12 0 0 0 24 12.1"/>
+          </svg>
+        </div>
+
+        <div class="social-info">
+          <div class="social-name">Facebook</div>
+          <div class="social-description">Connect with me</div>
+        </div>
+
+        <div class="external-arrow">↗</div>
+      </a>
+
+      <!-- TELEGRAM CHANNEL -->
+      <a
+        class="social-card"
+        href="https://t.me/yasinarft99k"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div class="social-icon">
+          <svg viewBox="0 0 24 24" class="fill-icon" aria-label="Telegram">
+            <path d="M23.9 4.4 20.3 21c-.3 1.2-1 1.5-2 1L12.7 18l-2.7 2.6c-.3.3-.5.5-1 .5l.4-5.7L19.8 6c.4-.4-.1-.6-.6-.3L5.8 14.1.2 12.4c-1.2-.4-1.2-1.2.3-1.8L22.2 2.3c1-.4 1.9.2 1.7 2.1z"/>
+          </svg>
+        </div>
+
+        <div class="social-info">
+          <div class="social-name">Telegram Channel</div>
+          <div class="social-description">My official channel & updates</div>
+        </div>
+
+        <div class="external-arrow">↗</div>
+      </a>
+
+      <!-- DISCORD -->
+      <a
+        class="social-card"
+        href="https://discordapp.com/users/1405228799699718264"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div class="social-icon">
+          <svg viewBox="0 0 24 24" class="fill-icon" aria-label="Discord">
+            <path d="M19.7 5.1A19 19 0 0 0 15 3.6l-.6 1.2a17 17 0 0 0-4.8 0L9 3.6a19 19 0 0 0-4.7 1.5C1.3 9.5.5 13.8.9 18a19 19 0 0 0 5.8 3l1.2-2a12 12 0 0 1-1.9-.9l.5-.4a13.5 13.5 0 0 0 11 0l.5.4a12 12 0 0 1-1.9.9l1.2 2a19 19 0 0 0 5.8-3c.5-4.9-.8-9.1-3.4-12.9zM8.8 14.8c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2 2 1 2 2.2-.9 2.2-2 2.2zm6.4 0c-1.1 0-2-1-2-2.2s.9-2.2 2-2.2 2 1 2 2.2-.9 2.2-2 2.2z"/>
+          </svg>
+        </div>
+
+        <div class="social-info">
+          <div class="social-name">Discord</div>
+          <div class="social-description">Connect with me on Discord</div>
+        </div>
+
+        <div class="external-arrow">↗</div>
+      </a>
+
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+
+  <footer class="footer">
+    <div class="footer-brand">YASIN</div>
+
+    <p>
+      Independent creator. Mobile editor.<br>
+      Always creating something new.
+    </p>
+
+    <p class="footer-note">
+      Designed with creativity · © <span id="year"></span> YASIN
+    </p>
+  </footer>
+
+</main>
+
+<script>
+/* CURRENT YEAR */
+
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+
+/* SCROLL REVEAL */
+
+const revealItems = document.querySelectorAll(".reveal");
+
+if ("IntersectionObserver" in window) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.12
+  });
+
+  revealItems.forEach((item) => observer.observe(item));
+} else {
+  revealItems.forEach((item) => item.classList.add("visible"));
+}
+
+/* FALLBACK IF LOGO IMAGE FAILS */
+
+document.querySelectorAll(".app-logo-box img").forEach((img) => {
+  img.addEventListener("error", function () {
+    this.style.display = "none";
+
+    const fallback = this.nextElementSibling;
+
+    if (fallback) {
+      fallback.style.display = "block";
+    }
+  });
+});
+</script>
+
+</body>
+</html>
